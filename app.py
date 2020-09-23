@@ -37,6 +37,7 @@ def home_page():
 @app.route('/reviews_page', methods = ['POST'])    
 def review_page():
     if request.method == "POST":
+        try:
             prod_name = request.form['selected_product_name']
             comment = []
             name = []
