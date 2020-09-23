@@ -45,7 +45,7 @@ def review_page():
         likes_dislikes = []
         likes = []
         dislikes = []
-        for i in range(20):
+        for i in range(5):
             l = globals()['l']
             for splitter in l:
                 l_r = splitter.split("/")
