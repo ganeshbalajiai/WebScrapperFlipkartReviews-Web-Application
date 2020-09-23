@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        table, th, td{
+            border: 1px solid black;
+            padding:5px;
+            border-collapse: collapse;
+        }
+        .qstn{
+            padding:10px;
+            background-color: blanchedalmond;
+        }
+        .down{
+            background-color:skyblue;
+            padding:10px;
+        }
+        .review{
+            background-color:snow;
+            margin:20px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function downloadCSV(csv, filename) {
+            var csvFile;
+            var downloadLink;
+        
+            // CSV file
+            csvFile = new Blob([csv], {type: "text/csv"});
+        
+            // Download link
+            downloadLink = document.createElement("a");
+        
+            // File name
+            downloadLink.download = filename;
+        
+            // Create a link to the file
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+        
+            // Hide download link
+            downloadLink.style.display = "none";
+        
+            // Add the link to DOM
+            document.body.appendChild(downloadLink);
+        
+            // Click download link
+            downloadLink.click();
+        }
+        function exportTableToCSV(filename) {
+            var csv = [];
+            var rows = document.querySelectorAll("table tr");
+            
+            for (var i = 0; i < rows.length; i++) {
+                var row = [], cols = rows[i].querySelectorAll("td, th");
+                
+                for (var j = 0; j < cols.length; j++) 
+                    row.push(cols[j].innerText);
+                
+                csv.push(row.join(","));        
+            }
+        
+            // Download CSV file
+            downloadCSV(csv.join("\n"), filename);
+        }
+    </script>
+    <title>Home Page</title>
+</head>
+<body style = "background-color:darkslategrey;">
+    <div class = "qstn">
+    <form action = "\" method = 'POST'>
+        <div class = "form-group" class = "container">
+        Enter your product for getting reviews:<input type = "text" class ="form-control" name = "product_name" required>
+        <input type = "submit" class = "btn btn-primary">
+        </div>
+    </form>
+    <p>Select the product from your list in  {{input_product}} :</p>
+    <form action = "reviews_page" method = 'POST'>
+            <div class = "form-group" class = "container">
+            <select class = "form-control" name = "selected_product_name">
+                {% for i in list_name %}
+                <option>{{i}}</option>
+                {% endfor %}
+            </select>
+            <input type = "submit" class = "btn btn-primary">
+            </div>
+    </form>
+    </div>
+    {%if reviews %}
+    <div class = "down">
+        <h3>Here your Reviews!!!</h3>
+        <p>To download this table, Click download table!!!</p>
+        <button onClick = "exportTableToCSV('reviews.csv')">Download table</button>
+    </div>
+    <div class = "review">
+    <h1 style = "text-align: center; padding:5px;">Reviews of {{prod_name}}</h1>
+    <table class="table table-hover">
+        <tr>
+        <th>Name</th>
+        <th>Comment</th>
+        <th>Review</th>
+        <th>Rating</th>
+        <th>likes</th>
+        <th>dislikes</th>
+        </tr>
+    {% for i in lens %}
+        <tr>
+        <td>{{reviews[i]['Name']}}</td>
+        <td>{{reviews[i]['Comment']}}</td>
+        <td>{{reviews[i]['Review']}}</td>
+        <td>{{reviews[i]['Rating']}}</td>
+        <td>{{reviews[i]['likes']}}</td>
+        <td>{{reviews[i]['dislikes']}}</td>
+        </tr>
+    {% endfor %}
+    {% endif %}
+    </table>
+    </div>
+</body>
+</html>
